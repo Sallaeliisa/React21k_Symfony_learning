@@ -4,9 +4,10 @@
 namespace App;
 
 
+use App\Utils\BankAccountInterface;
 use function Symfony\Component\String\b;
 
-class Account
+class Account implements BankAccountInterface
 {
     private $balance;
     private $id;
@@ -19,11 +20,37 @@ class Account
         return $this->balance;
     }
 
+    public function setBalance(int $amount) {
+    $this->balance = $amount;
+}
+
     public function getId(){
         return $this->id;
     }
 
-    public function deposit($depositAmount){
+    public function deposit(int $amount): void
+    {
+        if ($amount > 0) {
+            $newAmount = $this->getBalance() + $amount;
+            $this->setBalance($newAmount);
+        }
+    }
+
+    public function withdraw(int $amount): bool
+    {
+        if ($amount > 0 && $amount < $this->getBalance()) {
+            $newAmount = $this->getBalance() - $amount;
+            $this->setBalance($newAmount);
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
+
+
+
+    /**public function deposit($depositAmount){
         if ($depositAmount > 0){
             $this->balance = $this->balance + $depositAmount;
         }
@@ -36,4 +63,4 @@ class Account
         }
         return $this->balance;
     }
-}
+}*/
